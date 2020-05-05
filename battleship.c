@@ -17,26 +17,43 @@
 int tabuleiro[10][10]; //Matriz para representar o tabuleiro do jogo
 
 void imprimeTabuleiro(){
-	for (int i = 0; i < 10; ++i)
-	{
-		for (int j = 0; j < 10; ++j)
-		{
+	for (int i = 0; i < 10; ++i){
+		for (int j = 0; j < 10; ++j){
 			printf("%d ", tabuleiro[i][j]);
 		}
 		printf("\n");
 	}
 }
 
+int vazio(){
+	for (int i = 0; i < 10; ++i){
+		for (int j = 0; j < 10; ++j){
+			if (tabuleiro[i][j] != 0){
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
 //transforma o numero da linha
 int linhas(char letra){
-	printf("Linha: %d\n", letra-97);
-	return letra-97;
+	if (letra > 96 && letra < 107){
+		return letra-97;
+	} else if (letra > 64 && letra < 75){
+		return letra-75;
+	} else {
+		printf("Caracter diferente de a-j!\n");
+	}
 }
 
 //transforma o numero da coluna
 int colunas(char numero){
-	printf("Coluna: %d\n", numero-48);
-	return numero-48;
+	if (numero < 48 || numero > 57){ //se for um caracter diferente de {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+		printf("Caracter diferente de 0-9!\n");
+	} else {
+		return numero-48;
+	}
 }
 
 void posicionar_navio(char linha[10])
@@ -56,20 +73,10 @@ void posicionar_navio(char linha[10])
 		printf("Navio inválido!\n");
 	}
 
-	printf("Navio número %d\n", navio);
-
 	int x, y = 0;
 	//coordenadas da posicao inicial do navio
-	if (linha[2] < 97 || linha[2] > 106){ //se for um caracter diferente de {a, b, c, d, e, f, g, h, i, j}
-		printf("Caracter diferente de 0-9!\n");
-	} else {
-		int x = linhas(linha[2]);
-		if (linha[4] < 48 || linha[4] > 57){ //se for um caracter diferente de {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-			printf("Letra diferente de a-j!\n");
-		} else {
-			int y = colunas(linha[4]);
-		}
-	}
+	x = linhas(linha[2]);
+	y = colunas(linha[4]);
 
 	//orientacao do navio
 	if (linha[6] == 'h'){ //horizontal
@@ -83,8 +90,6 @@ void posicionar_navio(char linha[10])
 	} else {
 		printf("Não é vertical e nem horizontal!\n");
 	}
-
-	imprimeTabuleiro();
 }
 
 void layout()
@@ -106,6 +111,11 @@ void layout()
 	}
 }
 
+void limparBuffer(){
+	char c;
+	while((c = getchar()) != '\n' && c != EOF);
+}
+
 int main(int argc, char const *argv[])
 {
 	//Inicia o tabuleiro
@@ -114,12 +124,28 @@ int main(int argc, char const *argv[])
 			tabuleiro[i][j] = 0;
 		}
 	}
-
 	layout();
-
-	while (!)
-
-	//imprimeTabuleiro();
-
+	imprimeTabuleiro();
+	int fim = 0;
+	int x, y = 0;
+	while (fim != 1){
+		printf("\nDigite a linha do tabuleiro que deseja atacar (a-j):\n");
+		x = getchar();
+		x = linhas(x);
+		limparBuffer();
+		printf("Digite a coluna do tabuleiro que deseja atacar (0-9):\n");
+		y = getchar();
+		y = colunas(y);
+		limparBuffer();
+		if (tabuleiro[x][y] != 0){
+			tabuleiro[x][y] = 0;
+			printf("\nBoom!\n");
+			//imprimeTabuleiro();
+		} else {
+			printf("\nSplash!\n");
+		}
+		fim = vazio();
+	}
+	printf("\nVocê venceu!\n");
 	return 0;
 }
