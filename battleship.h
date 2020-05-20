@@ -269,8 +269,6 @@ void layout(int** tabuleiro, char *arq)
 int jogada(int x, int y, int** tabuleiro){
 	if (tabuleiro[x][y] > 1 && tabuleiro[x][y] < 6){ //acertou navio
 			return 1;
-		} else if (tabuleiro[x][y] == 1 || tabuleiro[x][y] == 0){ //acertou posição que já foi jogada
-			return 2;
 		} else { //acertou água
 			return 0;
 		}
