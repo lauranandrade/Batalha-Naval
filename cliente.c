@@ -53,9 +53,7 @@ int main(int argc, char *argv[])
 	}
 
 	int x, y = 0; //coordenadas do tiro
-	//int x_tiro, y_tiro;
 	int c;
-	//int me_acertou = 0;
 	int acertei;
 	char aux, auy;
 
@@ -140,9 +138,9 @@ repete:
 		x = numeroColuna(buffer[0]);
 		y = numeroColuna(buffer[2]);
 		acertei = numeroColuna(buffer[4]);
-		//printf("\nAcertei no servidor: %d\n", acertei);
 
 		//marca na matriz de ataque onde atacou 1 para navio 0 para agua
+		//DA ERRO UMA HORA
 		if(acertei == 1)
 			meusTiros[numeroLinha(aux)][numeroColuna(auy)] = 1;
 		else
