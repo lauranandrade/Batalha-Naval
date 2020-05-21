@@ -83,9 +83,7 @@ int main(int argc, char *argv[])
 	int filax[8] = {-1};
 	int filay[8] = {-1};
 	char aux, auy; //guarda a linha do tabuleiro escolhida
-
 	char buffer[1024] = {0}; 
-	//char letras[10] = {'a','b','c','d','e','f','g','h','i','j'};
 
 	srand(time(NULL));
 	criaOponente(tabuleiroOponente);
@@ -124,10 +122,10 @@ int main(int argc, char *argv[])
 		y = numeroColuna(buffer[2]);
 		acertei_cliente = numeroColuna(buffer[4]);
 		
-		
-		//insere os pontos vizinhos numa fila
-		if (acertei_cliente == '1') {
-			int i=0;
+		//se o servidor acertou o cliente
+		//insere os pontos vizinhos a uma fila
+		if (acertei_cliente == 1) {
+			int i = 0;
 			for(;i<8 && filax[i] == -1;++i);
 			if (i<7) { 
 				filax[i] = x+1;
@@ -162,7 +160,6 @@ int main(int argc, char *argv[])
 			printf("\nCliente Ganhou!\n");
 			exit(0);
 		}
-
 
 		//pega um ponto aleatorio ou escolhe um ponto da fila
 		if (filax[0] != -1) {
@@ -201,6 +198,5 @@ int main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 	}
-
 	return 0; 
 } 

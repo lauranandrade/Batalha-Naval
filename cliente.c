@@ -95,16 +95,14 @@ inicio:
 	//jogada do cliente
 	printf("\nDigite a linha do tabuleiro que deseja atacar (a-j ou A-J) ou P para visualizar os tabuleiros: ");
 	x = getchar();
+	limparBuffer();
 	if (x == 'p' || x == 'P'){
 		teclaP(tabuleiro, meusTiros);
-		limparBuffer();
 		goto inicio;
 	} else if ((x > 96 && x < 107) || (x > 64 && x < 74)){
 		aux = x; //guarda a linha como char (a-j)
 		x = numeroLinha(x);
-		limparBuffer();
 	} else {
-		limparBuffer();
 		printf("\nLinha inválida!\n");
 		goto inicio;
 	}
@@ -112,13 +110,12 @@ repete:
 	printf("\nDigite a coluna do tabuleiro que deseja atacar (0-9): ");
 	y = getchar();
 	auy = y;  //guarda a linha como char ('0'-'9')
+	limparBuffer();
 	if (y < 48 || y > 57) {
 		printf("\nColuna inválida!\n");
-		limparBuffer();
 		goto repete;
 	} else {
 		y = numeroColuna(y);
-		limparBuffer();
 	}	
 
 	//cria uma string a ser enviada pelo socket
@@ -141,45 +138,58 @@ repete:
 
 		//marca na matriz de ataque onde atacou 1 para navio 0 para agua
 		//DA ERRO UMA HORA
-		if(acertei == 1)
+		if(acertei == 1){
+			printf("Acertei na linha %d e na coluna %d\n", numeroLinha(aux), numeroColuna(auy));
 			meusTiros[numeroLinha(aux)][numeroColuna(auy)] = 1;
-		else
+		}
+		else{
+			printf("Errei na linha %d e na coluna %d\n", numeroLinha(aux), numeroColuna(auy));
 			meusTiros[numeroLinha(aux)][numeroColuna(auy)] = 0;
+		}
 
 		printf("\nServidor atacou a posição %c%d\n", buffer[0]+49, y);
-		//limparBuffer();
 
 		//Jogada do servidor
 		int tiro = jogada(x, y, tabuleiro);
 		if (tiro) {
 			printf("\nServidor acertou!\n");
+			tabuleiro[x][y] = 1;
 		}
 		else if (!tiro){
 			printf("\nServidor errou!\n");
+			tabuleiro[x][y] = 0;
 		}
 		if(vazio(tabuleiro)) {
 			write(sock, PERDI, strlen(PERDI)); 
 			printf("\nServidor Ganhou!\n");
 			exit(0);
 		}
-
+	inicio2:
+		//jogada do cliente
 		printf("\nDigite a linha do tabuleiro que deseja atacar (a-j ou A-J) ou P para visualizar os tabuleiros: ");
 		x = getchar();
-		aux = x;
-		while (x == 80 || x == 112) {
-			teclaP(tabuleiro, meusTiros);
-			limparBuffer();
-			printf("\nDigite a linha do tabuleiro que deseja atacar (a-j ou A-J) ou P para visualizar os tabuleiros: ");
-			x = getchar();
-		}
 		limparBuffer();
+		if (x == 'p' || x == 'P'){
+			teclaP(tabuleiro, meusTiros);
+			goto inicio2;
+		} else if ((x > 96 && x < 107) || (x > 64 && x < 74)){
+			aux = x; //guarda a linha como char (a-j)
+			x = numeroLinha(x);
+		} else {
+			printf("\nLinha inválida!\n");
+			goto inicio2;
+		}
+	repete2:
 		printf("\nDigite a coluna do tabuleiro que deseja atacar (0-9): ");
 		y = getchar();
-		auy = y;
+		auy = y;  //guarda a linha como char ('0'-'9')
 		limparBuffer();
-
-		//x_tiro = x;
-		//y_tiro = y;
+		if (y < 48 || y > 57) {
+			printf("\nColuna inválida!\n");
+			goto repete2;
+		} else {
+			y = numeroColuna(y);
+		}
 
 		//cria uma string a ser enviada pelo socket
 		snprintf(ataque, 8, "%c %c %c", x, y, tiro);

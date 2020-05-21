@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-//#include "util.h"
 
 #define PERDI "perdi"
 
@@ -18,40 +17,13 @@
 #define num_con 3
 #define num_sub 4
 
-/*Cria matrizes de números inteiros
-  Parâmetros:
-  1. i: número de linhas da matriz
-  2. j: número de colunas da matriz
-*/
-int** criaMatriz(int i, int j) 
-{
-	int** retorno = (int**)malloc(sizeof(int*)*i);
-	for(int x = 0; x < i; x++) {
-		retorno[x] = (int*)malloc(sizeof(int*)*j);
-	}
-	return retorno;
-}
+void imprimeTabuleiro(int** tabuleiro);
+int letra2num(char letra);
+int numeroColuna(char numero);
+int numeroLinha(char letra);
 
-//transforma o numero da linha
-int numeroLinha(char letra){
-	if (letra > 96 && letra < 107){
-		return letra-97;
-	} else if (letra > 64 && letra < 75){
-		return letra-75;
-	}
-}
 
-//transforma o numero da coluna
-int numeroColuna(char numero){
-	return numero-48;
-}
-
-void limparBuffer(){
-	char c;
-	while((c = getchar()) != '\n' && c != EOF);
-}
-
-void criaOponente(int** meusTiros)
+void criaOponente(int** tabuleiroOponente)
 {
 	srand(time(NULL));
 	int linha, coluna, orientacao;
@@ -61,15 +33,15 @@ void criaOponente(int** meusTiros)
 		if (orientacao == 0){ //horizontal
 			linha = rand() % 10;
 			coluna = rand() % 6;
-			for (int j = 0; j < num_pa; ++j){
-				meusTiros[linha][coluna] = portaAvioes;
+			for (int j = 0; j < portaAvioes; ++j){
+				tabuleiroOponente[linha][coluna] = portaAvioes;
 				coluna++;
 			}
 		} else { //vertical
 			linha = rand() % 6;
 			coluna = rand() % 10;
-			for (int j = 0; j < num_pa; ++j){
-				meusTiros[linha][coluna] = portaAvioes;
+			for (int j = 0; j < portaAvioes; ++j){
+				tabuleiroOponente[linha][coluna] = portaAvioes;
 				linha++;
 			}
 		}
@@ -82,18 +54,18 @@ void criaOponente(int** meusTiros)
 			do{
 				linha = rand() % 10;
 				coluna = rand() % 7;
-			} while (meusTiros[linha][coluna] != 8 && meusTiros[linha][coluna+1] != 8 && meusTiros[linha][coluna+2] != 8 && meusTiros[linha][coluna+3] != 8);
-			for (int j = 0; j < num_nt; ++j){
-				meusTiros[linha][coluna] = navioTanque;
+			} while (tabuleiroOponente[linha][coluna] != 8 || tabuleiroOponente[linha][coluna+1] != 8 || tabuleiroOponente[linha][coluna+2] != 8 || tabuleiroOponente[linha][coluna+3] != 8);
+			for (int j = 0; j < navioTanque; ++j){
+				tabuleiroOponente[linha][coluna] = navioTanque;
 				coluna++;
 			}
 		} else { //vertical
 			do{
 				linha = rand() % 7;
 				coluna = rand() % 10;
-			} while (meusTiros[linha][coluna] != 8 && meusTiros[linha+1][coluna] != 8 && meusTiros[linha+2][coluna] != 8 && meusTiros[linha+3][coluna] != 8);
-			for (int j = 0; j < num_nt; ++j){
-				meusTiros[linha][coluna] = navioTanque;
+			} while (tabuleiroOponente[linha][coluna] != 8 || tabuleiroOponente[linha+1][coluna] != 8 || tabuleiroOponente[linha+2][coluna] != 8 || tabuleiroOponente[linha+3][coluna] != 8);
+			for (int j = 0; j < navioTanque; ++j){
+				tabuleiroOponente[linha][coluna] = navioTanque;
 				linha++;
 			}
 		}
@@ -106,18 +78,18 @@ void criaOponente(int** meusTiros)
 			do{
 				linha = rand() % 10;
 				coluna = rand() % 8;
-			} while (meusTiros[linha][coluna] != 8 && meusTiros[linha][coluna+1] != 8 && meusTiros[linha][coluna+2] != 8);
-			for (int j = 0; j < num_con; ++j){
-				meusTiros[linha][coluna] = contratorpedeiro;
+			} while (tabuleiroOponente[linha][coluna] != 8 || tabuleiroOponente[linha][coluna+1] != 8 || tabuleiroOponente[linha][coluna+2] != 8);
+			for (int j = 0; j < contratorpedeiro; ++j){
+				tabuleiroOponente[linha][coluna] = contratorpedeiro;
 				coluna++;
 			}
 		} else { //vertical
 			do{
 				linha = rand() % 8;
 				coluna = rand() % 10;
-			} while (meusTiros[linha][coluna] != 8 && meusTiros[linha+1][coluna] != 8 && meusTiros[linha+2][coluna] != 8);
-			for (int j = 0; j < num_con; ++j){
-				meusTiros[linha][coluna] = contratorpedeiro;
+			} while (tabuleiroOponente[linha][coluna] != 8 || tabuleiroOponente[linha+1][coluna] != 8 || tabuleiroOponente[linha+2][coluna] != 8);
+			for (int j = 0; j < contratorpedeiro; ++j){
+				tabuleiroOponente[linha][coluna] = contratorpedeiro;
 				linha++;
 			}
 		}
@@ -130,27 +102,27 @@ void criaOponente(int** meusTiros)
 			do{
 				linha = rand() % 10;
 				coluna = rand() % 9;
-			} while (meusTiros[linha][coluna] != 8 && meusTiros[linha][coluna+1] != 8);
-			for (int j = 0; j < num_sub; ++j){
-				meusTiros[linha][coluna] = submarino;
+			} while (tabuleiroOponente[linha][coluna] != 8 || tabuleiroOponente[linha][coluna+1] != 8);
+			for (int j = 0; j < submarino; ++j){
+				tabuleiroOponente[linha][coluna] = submarino;
 				coluna++;
 			}
 		} else { //vertical
 			do{
 				linha = rand() % 9;
 				coluna = rand() % 10;
-			} while (meusTiros[linha][coluna] != 8 && meusTiros[linha+1][coluna] != 8);
-			for (int j = 0; j < num_sub; ++j){
-				meusTiros[linha][coluna] = submarino;
+			} while (tabuleiroOponente[linha][coluna] != 8 || tabuleiroOponente[linha+1][coluna] != 8);
+			for (int j = 0; j < submarino; ++j){
+				tabuleiroOponente[linha][coluna] = submarino;
 				linha++;
 			}
 		}
 	}
 }
 
-void imprimeTabuleiro(int **tabuleiro)
+void imprimeTabuleiro(int** tabuleiro)
 {
-	printf("Seu tabuleiro:\n");
+	printf("Tabuleiro:\n");
 	printf("  0 1 2 3 4 5 6 7 8 9\n");
 	char coluna  = 'A';
 	for (int i = 0; i < 10; ++i){
@@ -167,7 +139,7 @@ int vazio(int** tabuleiro)
 {
 	for (int i = 0; i < 10; ++i){
 		for (int j = 0; j < 10; ++j){
-			if (tabuleiro[i][j] != 0 && tabuleiro[i][j] != 1)
+			if (tabuleiro[i][j] != 0 && tabuleiro[i][j] != 1 && tabuleiro[i][j] != 8)
 				return 0;
 		}
 	}
@@ -214,18 +186,20 @@ void teclaP(int** tabuleiro, int** meusTiros)
 	for (int i = 0; i < 10; ++i){
 		printf("%c ", coluna);
 		for (int j = 0; j < 10; ++j){
-			if (tabuleiro[i][j] <= 5){
-				printf("x ");
+			if (tabuleiro[i][j] > 1 && tabuleiro[i][j] < 8){ //posições de barco ainda não atacadas
+				printf("1 ");
 			}
-			else {
+			else if (tabuleiro[i][j] == 8 || tabuleiro[i][j] == 0){ //posições de água não jogadas ainda
 				printf("- ");
+			} else if (tabuleiro[i][j] == 1){//posições de barco já atacadas
+				printf("x ");
 			}
 		}
 		coluna = coluna + 1;
 		printf("\n");
 	}
 
-	printf("\n  Tabuleiro oponente:\n");
+	printf("\n  Seus tiros:\n");
 	printf("  0 1 2 3 4 5 6 7 8 9\n");
 	coluna  = 'A';
 	for (int i = 0; i < 10; ++i){
@@ -274,16 +248,37 @@ int jogada(int x, int y, int** tabuleiro){
 		}
 }
 
-int letra2num(char letra)
+/*Cria matrizes de números inteiros
+  Parâmetros:
+  1. i: número de linhas da matriz
+  2. j: número de colunas da matriz
+*/
+int** criaMatriz(int i, int j) 
 {
-	int num = 0;
-	if (letra < 58)
-		num = letra-48;
-	else if (letra < 91)
-		num = letra-65;
-	else
-		num = letra-97;
-	return num;
+	int** retorno = (int**)malloc(sizeof(int*)*i);
+	for(int x = 0; x < i; x++) {
+		retorno[x] = (int*)malloc(sizeof(int*)*j);
+	}
+	return retorno;
+}
+
+//transforma o numero da linha
+int numeroLinha(char letra){
+	if (letra > 96 && letra < 107){
+		return letra-97;
+	} else if (letra > 64 && letra < 75){
+		return letra-75;
+	}
+}
+
+//transforma o numero da coluna
+int numeroColuna(char numero){
+	return numero-48;
+}
+
+void limparBuffer(){
+	char c;
+	while((c = getchar()) != '\n' && c != EOF);
 }
 
 int str2int(char *str)
@@ -294,4 +289,16 @@ int str2int(char *str)
 		res += letra2num(str[i]) * pow(10,t-i-1);
 	}
 	return res;
+}
+
+int letra2num(char letra)
+{
+	int num = 0;
+	if (letra < 58)
+		num = letra-48;
+	else if (letra < 91)
+		num = letra-65;
+	else
+		num = letra-97;
+	return num;
 }
