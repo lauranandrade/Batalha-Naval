@@ -189,7 +189,7 @@ void teclaP(int** tabuleiro, int** meusTiros)
 			if (tabuleiro[i][j] > 1 && tabuleiro[i][j] < 8){ //posições de barco ainda não atacadas
 				printf("1 ");
 			}
-			else if (tabuleiro[i][j] == 8 || tabuleiro[i][j] == 0){ //posições de água não jogadas ainda
+			else if (tabuleiro[i][j] == 8 || tabuleiro[i][j] == 0){ //posições de água
 				printf("- ");
 			} else if (tabuleiro[i][j] == 1){//posições de barco já atacadas
 				printf("x ");

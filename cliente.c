@@ -139,11 +139,9 @@ repete:
 		//marca na matriz de ataque onde atacou 1 para navio 0 para agua
 		//DA ERRO UMA HORA
 		if(acertei == 1){
-			printf("Acertei na linha %d e na coluna %d\n", numeroLinha(aux), numeroColuna(auy));
 			meusTiros[numeroLinha(aux)][numeroColuna(auy)] = 1;
 		}
 		else{
-			printf("Errei na linha %d e na coluna %d\n", numeroLinha(aux), numeroColuna(auy));
 			meusTiros[numeroLinha(aux)][numeroColuna(auy)] = 0;
 		}
 
